@@ -1,53 +1,174 @@
-public class BoardTest {
-    public static void main(String[] args) {
-        // Créer un plateau de jeu de taille 3x3
-        Board board = new Board(3);
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
-        // Test 1 : Vérifier la méthode play() en plaçant des pièces
-        board.play(new Move(0, 0), Mark.X);
-        board.play(new Move(1, 1), Mark.O);
-        board.play(new Move(0, 1), Mark.X);
-        board.play(new Move(2, 2), Mark.O);
+class BoardTest {
 
-        // Afficher le plateau après les mouvements
-        printBoard(board);
+    @Test
+    void testEvaluateNoWinner() {
+        // Créez un plateau sans gagnant
+        //   |   |
+        //   |   |
+        //   |   |
+        Board board = new Board();
 
-        // Test 2 : Vérifier la méthode evaluate() pour X (joueur X)
-        int resultX = board.evaluate(Mark.X);
-        System.out.println("Résultat de l'évaluation pour X : " + resultX);
-
-        // Test 3 : Vérifier la méthode evaluate() pour O (joueur O)
-        int resultO = board.evaluate(Mark.O);
-        System.out.println("Résultat de l'évaluation pour O : " + resultO);
-
-        board.play(new Move(0, 2), Mark.X);
-        // Afficher le plateau après les mouvements
-        printBoard(board);
-
-        // Test 2 : Vérifier la méthode evaluate() pour X (joueur X)
-        resultX = board.evaluate(Mark.X);
-        System.out.println("Résultat de l'évaluation pour X : " + resultX);
-
-        // Test 3 : Vérifier la méthode evaluate() pour O (joueur O)
-        resultO = board.evaluate(Mark.O);
-        System.out.println("Résultat de l'évaluation pour O : " + resultO);
+        // Assurez-vous que le résultat de l'évaluation est de 0 (pas de gagnant pour le moment)
+        int result = board.evaluate(Mark.X);
+        assertEquals(0, result);
     }
 
-    // Méthode pour afficher le plateau
-    private static void printBoard(Board board) {
-        int size = board.getSize();
-        Mark[][] grid = board.getBoard();
+    @Test
+    void testEvaluateHorizontalWinForX() {
+        // Créez un plateau avec une victoire horizontale pour X
+        // X | X | X
+        //   |   |
+        //   |   |
+        Board board = new Board();
+        board.play(new Move(0, 0), Mark.X);
+        board.play(new Move(0, 1), Mark.X);
+        board.play(new Move(0, 2), Mark.X);
 
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                if (grid[row][col] == Mark.EMPTY) {
-                    System.out.print("[]");
-                } else {
-                    System.out.print(grid[row][col] + " ");
-                }
+        // Assurez-vous que le résultat de l'évaluation est de 100 (X gagne)
+        int result = board.evaluate(Mark.X);
+        assertEquals(100, result);
+    }
 
-            }
-            System.out.println();
-        }
+    @Test
+    void testEvaluateVerticalWinForO() {
+        // Créez un plateau avec une victoire verticale pour O
+        //   | O |
+        //   | O |
+        //   | O |
+        Board board = new Board();
+        board.play(new Move(0, 1), Mark.O);
+        board.play(new Move(1, 1), Mark.O);
+        board.play(new Move(2, 1), Mark.O);
+
+        // Assurez-vous que le résultat de l'évaluation est de 100 (O gagne)
+        int result = board.evaluate(Mark.O);
+        assertEquals(100, result);
+    }
+
+    @Test
+    void testEvaluateDiagonalWinForX() {
+        // Créez un plateau avec une victoire diagonale pour X
+        // X |   |
+        //   | X |
+        //   |   | X
+        Board board = new Board();
+        board.play(new Move(0, 0), Mark.X);
+        board.play(new Move(1, 1), Mark.X);
+        board.play(new Move(2, 2), Mark.X);
+
+        // Assurez-vous que le résultat de l'évaluation est de 100 (X gagne)
+        int result = board.evaluate(Mark.X);
+        assertEquals(100, result);
+    }
+
+    @Test
+    void testEvaluateAntiDiagonalWinForO() {
+        // Créez un plateau avec une victoire en diagonale inverse pour O
+        //   |   | O
+        //   | O |
+        // O |   |
+        Board board = new Board();
+        board.play(new Move(0, 2), Mark.O);
+        board.play(new Move(1, 1), Mark.O);
+        board.play(new Move(2, 0), Mark.O);
+
+        // Assurez-vous que le résultat de l'évaluation est de 100 (O gagne)
+        int result = board.evaluate(Mark.O);
+        assertEquals(100, result);
+    }
+
+    @Test
+    void testEvaluateDraw() {
+        // Créez un nouveau plateau
+        Board board = new Board();
+
+        // Effectuez des mouvements aboutissant à une partie nulle
+        // X | O | X
+        // X | X | O
+        // O | X | O
+        board.play(new Move(0, 0), Mark.X);
+        board.play(new Move(0, 1), Mark.O);
+        board.play(new Move(0, 2), Mark.X);
+        board.play(new Move(1, 0), Mark.X);
+        board.play(new Move(1, 1), Mark.X);
+        board.play(new Move(1, 2), Mark.O);
+        board.play(new Move(2, 0), Mark.O);
+        board.play(new Move(2, 1), Mark.X);
+        board.play(new Move(2, 2), Mark.O);
+
+        // Évaluez le plateau
+        int result = board.evaluate(Mark.X);
+
+        // Dans cet exemple, la partie se termine par une égalité, le résultat devrait donc être -1.
+        assertEquals(-1, result);
+    }
+
+    @Test
+    void testEvaluateHorizontalWinForO() {
+        // Créez un plateau avec une victoire horizontale pour O
+        //   |   |
+        // X | X | X
+        //   |   |
+        Board board = new Board();
+        board.play(new Move(1, 0), Mark.X);
+        board.play(new Move(1, 1), Mark.X);
+        board.play(new Move(1, 2), Mark.X);
+
+        // Assurez-vous que le résultat de l'évaluation est de 100 (X gagne)
+        int result = board.evaluate(Mark.X);
+        assertEquals(100, result);
+    }
+
+    @Test
+    void testEvaluateVerticalWinForX() {
+        // Créez un plateau avec une victoire verticale pour X
+        //   |   | X
+        // O | O | X
+        //   |   | X
+        Board board = new Board();
+        board.play(new Move(0, 2), Mark.X);
+        board.play(new Move(1, 2), Mark.X);
+        board.play(new Move(2, 2), Mark.X);
+
+        // Assurez-vous que le résultat de l'évaluation est de 100 (X gagne)
+        int result = board.evaluate(Mark.X);
+        assertEquals(100, result);
+    }
+
+    @Test
+    void testEvaluateDiagonalWinForO() {
+        // Créez un plateau avec une victoire en diagonale pour O
+        // X |   | O
+        //   | O |
+        // O |   | X
+        Board board = new Board();
+        board.play(new Move(0, 0), Mark.X);
+        board.play(new Move(0, 2), Mark.O);
+        board.play(new Move(1, 1), Mark.O);
+        board.play(new Move(2, 0), Mark.O);
+        board.play(new Move(2, 2), Mark.X);
+
+        // Assurez-vous que le résultat de l'évaluation est de 100 (O gagne)
+        int result = board.evaluate(Mark.O);
+        assertEquals(100, result);
+    }
+
+    @Test
+    void testEvaluateAntiDiagonalWinForX() {
+        // Créez un plateau avec une victoire en diagonale inverse pour X
+        //   |   | X
+        //   | X |
+        // X |   |
+        Board board = new Board();
+        board.play(new Move(0, 2), Mark.X);
+        board.play(new Move(1, 1), Mark.X);
+        board.play(new Move(2, 0), Mark.X);
+
+        // Assurez-vous que le résultat de l'évaluation est de 100 (X gagne)
+        int result = board.evaluate(Mark.X);
+        assertEquals(100, result);
     }
 }

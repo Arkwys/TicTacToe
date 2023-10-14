@@ -1,13 +1,12 @@
-// Enumeration pour représenter les marques sur le plateau
+import java.util.ArrayList;
+
 class Board {
     private Mark[][] board;
     private int size;
 
-    private Mark winner;
-
     // Constructeur pour initialiser le plateau de jeu vide
-    public Board(int size) {
-        this.size = size;
+    public Board() {
+        size = 3; // Définir la taille sur 3x3
         board = new Mark[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -26,57 +25,49 @@ class Board {
             board[row][col] = mark;
         } else {
             // Gérer les erreurs si la case n'est pas valide ou déjà occupée
-            System.out.println("Mouvement invalide !");
+            //System.out.println("Mouvement invalide !");
         }
     }
 
-    // Évalue l'état du jeu pour la marque spécifiée
     public int evaluate(Mark mark) {
-        // À implémenter : logique d'évaluation du jeu
+        Mark opponentMark = (mark == Mark.X) ? Mark.O : Mark.X;
+        int size = getSize();
 
-        // Vérifier les lignes, les colonnes et les diagonales pour déterminer le résultat du jeu.
-
-        // Par exemple, vérifier les lignes horizontales
-        for (int row = 0; row < size; row++) {
-            int count = 0;
-            for (int col = 0; col < size; col++) {
-                if (board[row][col] == mark) {
-                    count++;
-                } else if (board[row][col] != Mark.EMPTY) {
-                    // Si une case est occupée par l'adversaire, aucune victoire possible dans cette ligne
-                    count = 0;
-                    break;
-                }
+        // Vérifiez les lignes, les colonnes et les diagonales pour une victoire
+        for (int i = 0; i < size; i++) {
+            if (board[i][0] == mark && board[i][1] == mark && board[i][2] == mark) {
+                return 100;  // Victoire en ligne
             }
-            if (count == size) {
-                // Le joueur 'mark' a gagné
-                winner = mark;
-                return 100;
-            }
-            if (winner != null && winner != mark) {
-                return -100;
+            if (board[0][i] == mark && board[1][i] == mark && board[2][i] == mark) {
+                return 100;  // Victoire en colonne
             }
         }
 
-        // Vous devrez faire des vérifications similaires pour les colonnes et les diagonales.
+        // Vérifiez les diagonales
+        if (board[0][0] == mark && board[1][1] == mark && board[2][2] == mark) {
+            return 100;  // Victoire diagonale principale
+        }
+        if (board[0][2] == mark && board[1][1] == mark && board[2][0] == mark) {
+            return 100;  // Victoire anti-diagonale
+        }
 
-        // Si aucune victoire n'est détectée, vous pouvez vérifier s'il y a égalité (match nul).
-        boolean isTie = true;
+        // Vérifiez s'il y a un match nul
+        boolean isDraw = true;
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 if (board[row][col] == Mark.EMPTY) {
-                    isTie = false; // Il reste au moins une case vide, ce n'est pas un match nul
+                    isDraw = false;
                     break;
                 }
             }
         }
 
-        if (isTie) {
-            return 0; // Match nul
+        if (isDraw) {
+            return -1;  // C'est un match nul
         }
 
-        // Si aucune victoire ni égalité n'est détectée, le jeu continu
-        return -1; // Le jeu continu
+        // Si aucune victoire, défaite ou match nul n'est détecté, le jeu continue.
+        return 0;
     }
 
     public int getSize() {
@@ -85,5 +76,19 @@ class Board {
 
     public Mark[][] getBoard() {
         return board;
+    }
+
+    public ArrayList<Move> getAvailableMoves() {
+        ArrayList<Move> availableMoves = new ArrayList<>();
+
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                if (board[row][col] == Mark.EMPTY) {
+                    availableMoves.add(new Move(row, col));
+                }
+            }
+        }
+
+        return availableMoves;
     }
 }
