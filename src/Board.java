@@ -91,4 +91,8 @@ class Board {
 
         return availableMoves;
     }
+
+    public Mark getOpponentMark(Mark playerMark) {
+        return (playerMark == Mark.X) ? Mark.O : Mark.X;
+    }
 }
