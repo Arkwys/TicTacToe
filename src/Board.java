@@ -33,25 +33,43 @@ class Board {
         Mark opponentMark = (mark == Mark.X) ? Mark.O : Mark.X;
         int size = getSize();
 
-        // Vérifiez les lignes, les colonnes et les diagonales pour une victoire
+        // Vérifiez les conditions de victoire du joueur
         for (int i = 0; i < size; i++) {
             if (board[i][0] == mark && board[i][1] == mark && board[i][2] == mark) {
-                return 100;  // Victoire en ligne
+                return 100;  // Le joueur gagne en ligne
             }
             if (board[0][i] == mark && board[1][i] == mark && board[2][i] == mark) {
-                return 100;  // Victoire en colonne
+                return 100;  // Le joueur gagne en colonne
+            }
+        }
+
+        // Vérifiez les conditions de victoire de l'adversaire et retournez -100
+        for (int i = 0; i < size; i++) {
+            if (board[i][0] == opponentMark && board[i][1] == opponentMark && board[i][2] == opponentMark) {
+                return -100;  // L'adversaire gagne en ligne
+            }
+            if (board[0][i] == opponentMark && board[1][i] == opponentMark && board[2][i] == opponentMark) {
+                return -100;  // L'adversaire gagne en colonne
             }
         }
 
         // Vérifiez les diagonales
         if (board[0][0] == mark && board[1][1] == mark && board[2][2] == mark) {
-            return 100;  // Victoire diagonale principale
+            return 100;  // Le joueur gagne en diagonale principale
         }
         if (board[0][2] == mark && board[1][1] == mark && board[2][0] == mark) {
-            return 100;  // Victoire anti-diagonale
+            return 100;  // Le joueur gagne en diagonale inverse
         }
 
-        // Vérifiez s'il y a un match nul
+        // Vérifiez les victoires en diagonale de l'adversaire
+        if (board[0][0] == opponentMark && board[1][1] == opponentMark && board[2][2] == opponentMark) {
+            return -100;  // L'adversaire gagne en diagonale principale
+        }
+        if (board[0][2] == opponentMark && board[1][1] == opponentMark && board[2][0] == opponentMark) {
+            return -100;  // L'adversaire gagne en diagonale inverse
+        }
+
+        // Vérifiez un match nul
         boolean isDraw = true;
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {

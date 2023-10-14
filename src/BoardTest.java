@@ -171,4 +171,24 @@ class BoardTest {
         int result = board.evaluate(Mark.X);
         assertEquals(100, result);
     }
+
+    @Test
+    void testEvaluateOpponentWin() {
+        // Créez un plateau avec une victoire pour O
+        // X |   | X
+        // O | O | O
+        // X |   | X
+        Board board = new Board();
+        board.play(new Move(0, 0), Mark.X);
+        board.play(new Move(0, 2), Mark.X);
+        board.play(new Move(1, 0), Mark.O);
+        board.play(new Move(1, 1), Mark.O);
+        board.play(new Move(1, 2), Mark.O);
+        board.play(new Move(2, 0), Mark.X);
+        board.play(new Move(2, 2), Mark.X);
+
+        // Assurez-vous que le résultat de l'évaluation est de -100 (X perd)
+        int result = board.evaluate(Mark.X);
+        assertEquals(-100, result);
+    }
 }
