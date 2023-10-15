@@ -1,13 +1,21 @@
 import java.util.ArrayList;
 public class CPUPlayer {
     private Mark cpu;
+    private int numExploredNodes;
     private static final int MAX_DEPTH = 6;
 
     public CPUPlayer(Mark cpu) {
         this.cpu = cpu;
     }
 
+    // Ne pas changer cette méthode
+    public int  getNumOfExploredNodes(){
+        return numExploredNodes;
+    }
+
+
     public ArrayList<Move> getNextMoveMinMax(Board board) {
+        numExploredNodes = 0;
         int bestScore = Integer.MIN_VALUE;
         ArrayList<Move> bestMoves = new ArrayList<>();
 
@@ -15,7 +23,7 @@ public class CPUPlayer {
             for (int j = 0; j < 3; j++) {
                 if (board.isTileEmpty(i, j)) {
                     board.play(new Move(i, j), cpu);
-                    int score = miniMax(board, 0, true);
+                    int score = miniMax(board, 0, false);
                     board.play(new Move(i, j), Mark.EMPTY);
                     if (score > bestScore) {
                         bestScore = score;
@@ -31,8 +39,9 @@ public class CPUPlayer {
     }
 
     private int miniMax(Board board, int depth, boolean isMaximizing) {
+        numExploredNodes++;
         if (board.evaluate(cpu) != -1) {
-            return board.evaluate(cpu) - depth;
+            return board.evaluate(cpu);
         }
         if (isMaximizing) {
             int bestScore = Integer.MIN_VALUE;
@@ -64,6 +73,7 @@ public class CPUPlayer {
     }
 
     public ArrayList<Move> getNextMoveAB(Board board) {
+        numExploredNodes = 0;
         int bestScore = Integer.MIN_VALUE;
         ArrayList<Move> bestMoves = new ArrayList<>();
         int alpha = Integer.MIN_VALUE;
@@ -91,6 +101,7 @@ public class CPUPlayer {
 
 
     private int alphaBeta(Board board, int depth, int alpha, int beta, boolean isMaximizing) {
+        numExploredNodes++;
         int result = board.evaluate(cpu);
         if (result != -1) {
             return result - depth;

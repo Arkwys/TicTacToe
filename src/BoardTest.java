@@ -33,6 +33,23 @@ class BoardTest {
     }
 
     @Test
+    void testEvaluateHorizontalWinForX2() {
+        // Créez un plateau avec une victoire horizontale pour X
+        //   |   |
+        //   |   |
+        // X | X | X
+        Board board = new Board();
+        board.play(new Move(0, 2), Mark.X);
+        board.play(new Move(1, 2), Mark.X);
+        board.play(new Move(2, 2), Mark.X);
+
+        // Assurez-vous que le résultat de l'évaluation est de 100 (X gagne)
+        int result = board.evaluate(Mark.X);
+        assertEquals(100, result);
+    }
+
+
+    @Test
     void testEvaluateVerticalWinForO() {
         // Créez un plateau avec une victoire verticale pour O
         //   | O |
