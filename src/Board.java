@@ -1,89 +1,88 @@
-// Enumeration pour représenter les marques sur le plateau
+import java.util.ArrayList;
+import java.util.List;
+
 class Board {
     private Mark[][] board;
-    private int size;
+    private List<Move> moveHistory;
 
-    private Mark winner;
-
-    // Constructeur pour initialiser le plateau de jeu vide
-    public Board(int size) {
-        this.size = size;
-        board = new Mark[size][size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+    public Board() {
+        board = new Mark[3][3];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
                 board[i][j] = Mark.EMPTY;
             }
         }
+        moveHistory = new ArrayList<>();
     }
 
-    // Place la pièce 'mark' sur le plateau à la position spécifiée dans Move
     public void play(Move m, Mark mark) {
-        int row = m.getRow();
-        int col = m.getCol();
-
-        // Assurez-vous que la case est valide et vide
-        if (row >= 0 && row < size && col >= 0 && col < size && board[row][col] == Mark.EMPTY) {
-            board[row][col] = mark;
-        } else {
-            // Gérer les erreurs si la case n'est pas valide ou déjà occupée
-            System.out.println("Mouvement invalide !");
-        }
+        board[m.getRow()][m.getCol()] = mark;
+        moveHistory.add(m);
     }
 
-    // Évalue l'état du jeu pour la marque spécifiée
+    public void undoMove(Move m) {
+        board[m.getRow()][m.getCol()] = Mark.EMPTY;
+        moveHistory.remove(moveHistory.size() - 1);
+    }
+
     public int evaluate(Mark mark) {
-        // À implémenter : logique d'évaluation du jeu
-
-        // Vérifier les lignes, les colonnes et les diagonales pour déterminer le résultat du jeu.
-
-        // Par exemple, vérifier les lignes horizontales
-        for (int row = 0; row < size; row++) {
-            int count = 0;
-            for (int col = 0; col < size; col++) {
-                if (board[row][col] == mark) {
-                    count++;
-                } else if (board[row][col] != Mark.EMPTY) {
-                    // Si une case est occupée par l'adversaire, aucune victoire possible dans cette ligne
-                    count = 0;
-                    break;
-                }
+        //Victory Check
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] == mark && board[i][1] == mark && board[i][2] == mark) {
+                return 100; // Win
             }
-            if (count == size) {
-                // Le joueur 'mark' a gagné
-                winner = mark;
-                return 100;
-            }
-            if (winner != null && winner != mark) {
-                return -100;
+            if (board[0][i] == mark && board[1][i] == mark && board[2][i] == mark) {
+                return 100; // Win
             }
         }
+        if (board[0][0] == mark && board[1][1] == mark && board[2][2] == mark) {
+            return 100; // Win
+        }
+        if (board[0][2] == mark && board[1][1] == mark && board[2][0] == mark) {
+            return 100; // Win
+        }
 
-        // Vous devrez faire des vérifications similaires pour les colonnes et les diagonales.
-
-        // Si aucune victoire n'est détectée, vous pouvez vérifier s'il y a égalité (match nul).
-        boolean isTie = true;
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                if (board[row][col] == Mark.EMPTY) {
-                    isTie = false; // Il reste au moins une case vide, ce n'est pas un match nul
+        // Tie Check
+        boolean isDraw = true;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == Mark.EMPTY) {
+                    isDraw = false;
                     break;
                 }
             }
         }
-
-        if (isTie) {
-            return 0; // Match nul
+        if (isDraw) {
+            return 0; 
         }
 
-        // Si aucune victoire ni égalité n'est détectée, le jeu continu
-        return -1; // Le jeu continu
+        return -100; // No victory, no tie (game continues)
     }
 
-    public int getSize() {
-        return size;
+
+    public Mark getMark(int row, int col) {
+        return board[row][col];
     }
 
-    public Mark[][] getBoard() {
-        return board;
+    public void setMark(int row, int col, Mark mark) {
+        board[row][col] = mark;
+    }
+
+   
+    public boolean isGameOver() {
+        return evaluate(Mark.X) != 0 || evaluate(Mark.O) != 0;
+    }
+
+   
+    public List<Move> getAvailableMoves() {
+        List<Move> availableMoves = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == Mark.EMPTY) {
+                    availableMoves.add(new Move(i, j));
+                }
+            }
+        }
+        return availableMoves;
     }
 }
