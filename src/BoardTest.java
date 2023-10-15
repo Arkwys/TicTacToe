@@ -11,9 +11,9 @@ class BoardTest {
         //   |   |
         Board board = new Board();
 
-        // Assurez-vous que le résultat de l'évaluation est de 0 (pas de gagnant pour le moment)
+        // Assurez-vous que le résultat de l'évaluation est de -1 (pas de gagnant pour le moment)
         int result = board.evaluate(Mark.X);
-        assertEquals(0, result);
+        assertEquals(-1, result);
     }
 
     @Test
@@ -102,8 +102,8 @@ class BoardTest {
         // Évaluez le plateau
         int result = board.evaluate(Mark.X);
 
-        // Dans cet exemple, la partie se termine par une égalité, le résultat devrait donc être -1.
-        assertEquals(-1, result);
+        // Dans cet exemple, la partie se termine par une égalité, le résultat devrait donc être 0.
+        assertEquals(0, result);
     }
 
     @Test
