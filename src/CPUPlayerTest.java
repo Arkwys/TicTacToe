@@ -138,13 +138,13 @@ class CPUPlayerTest {
         // Get the next move using the Minimax algorithm
         ArrayList<Move> possibleMoves = cpuPlayer.getNextMoveMinMax(board);
 
-        // Assert that the best move for 'X' is at (0, 2).
+        // Assert that the best move for 'X' is at (2, 0).
         // X | X | X
         // O | O |
         //   |   |
         System.out.println("Chosen Move: " + possibleMoves.get(0).getRow() + ", " + possibleMoves.get(0).getCol() + " Should be: (0,2)");
-        assertEquals(0, possibleMoves.get(0).getRow());
-        assertEquals(2, possibleMoves.get(0).getCol());
+        assertEquals(2, possibleMoves.get(0).getRow());
+        assertEquals(0, possibleMoves.get(0).getCol());
     }
 
     @Test
@@ -165,12 +165,12 @@ class CPUPlayerTest {
         // Get the next move using the Minimax algorithm
         ArrayList<Move> possibleMoves = cpuPlayer.getNextMoveMinMax(board);
 
-        // Assert that the best move for 'X' is at (1, 2).
+        // Assert that the best move for 'X' is at (2, 1).
         //   |   |
         // O | 0 | X
         //   |   |
-        assertEquals(1, possibleMoves.get(0).getRow());
-        assertEquals(2, possibleMoves.get(0).getCol());
+        assertEquals(2, possibleMoves.get(0).getRow());
+        assertEquals(1, possibleMoves.get(0).getCol());
     }
 
     @Test
@@ -249,12 +249,12 @@ class CPUPlayerTest {
             // Get the next move using the Alpha-Beta Pruning algorithm
             ArrayList<Move> possibleMoves = cpuPlayer.getNextMoveAB(board);
 
-            // Assert that the best move for 'X' is at (0, 2).
+            // Assert that the best move for 'X' is at (2, 0).
             // X | X | X
             // O | O |
             //   |   |
-            assertEquals(0, possibleMoves.get(0).getRow());
-            assertEquals(2, possibleMoves.get(0).getCol());
+            assertEquals(2, possibleMoves.get(0).getRow());
+            assertEquals(0, possibleMoves.get(0).getCol());
         }
 
         @Test
@@ -275,11 +275,12 @@ class CPUPlayerTest {
             // Get the next move using the Alpha-Beta Pruning algorithm
             ArrayList<Move> possibleMoves = cpuPlayer.getNextMoveAB(board);
 
-            // Assert that the best move for 'O' is at (1, 2).
+            // Assert that the best move for 'O' is at (2, 1).
             //   |   |
             // O | O | O
-            assertEquals(1, possibleMoves.get(0).getRow());
-            assertEquals(2, possibleMoves.get(0).getCol());
+            //   |   |
+            assertEquals(2, possibleMoves.get(0).getRow());
+            assertEquals(1, possibleMoves.get(0).getCol());
         }
 
         @Test
