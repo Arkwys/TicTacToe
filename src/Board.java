@@ -113,4 +113,8 @@ class Board {
     public Mark getOpponentMark(Mark playerMark) {
         return (playerMark == Mark.X) ? Mark.O : Mark.X;
     }
+
+    public boolean isTileMarked(int row, int col) {
+        return board[row][col] != Mark.EMPTY;
+    }
 }
