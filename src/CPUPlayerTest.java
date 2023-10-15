@@ -165,7 +165,7 @@ class CPUPlayerTest {
         // Get the next move using the Minimax algorithm
         ArrayList<Move> possibleMoves = cpuPlayer.getNextMoveMinMax(board);
 
-        // Assert that the best move for 'X' is at (2, 1).
+        // Assert that the best move for 'X' is at (1, 2).
         //   |   |
         // O | 0 | X
         //   |   |
@@ -228,4 +228,114 @@ class CPUPlayerTest {
         assertEquals(0, possibleMoves.get(0).getRow());
         assertEquals(2, possibleMoves.get(0).getCol());
     }
-}
+
+        @Test
+        void testAlphaBetaAlgorithm_PlayerX_Could_Win_Horizontal() {
+            // Create a new board
+            Board board = new Board();
+
+            // Create a CPUPlayer with 'X' mark
+            CPUPlayer cpuPlayer = new CPUPlayer(Mark.X);
+
+            // Make valid moves for 'X' player to win horizontally
+            // X | X |
+            // O | O |
+            //   |   |
+            board.play(new Move(0, 0), Mark.X);
+            board.play(new Move(0, 1), Mark.O);
+            board.play(new Move(1, 0), Mark.X);
+            board.play(new Move(1, 1), Mark.O);
+
+            // Get the next move using the Alpha-Beta Pruning algorithm
+            ArrayList<Move> possibleMoves = cpuPlayer.getNextMoveAB(board);
+
+            // Assert that the best move for 'X' is at (0, 2).
+            // X | X | X
+            // O | O |
+            //   |   |
+            assertEquals(0, possibleMoves.get(0).getRow());
+            assertEquals(2, possibleMoves.get(0).getCol());
+        }
+
+        @Test
+        void testAlphaBetaAlgorithm_PlayerO_Could_Lose_Horizontal() {
+            // Create a new board
+            Board board = new Board();
+
+            // Create a CPUPlayer with 'O' mark
+            CPUPlayer cpuPlayer = new CPUPlayer(Mark.O);
+
+            // Make valid moves for 'O' player to lose horizontally
+            //   |   |
+            // O | O |
+            //   |   |
+            board.play(new Move(0, 1), Mark.O);
+            board.play(new Move(1, 1), Mark.O);
+
+            // Get the next move using the Alpha-Beta Pruning algorithm
+            ArrayList<Move> possibleMoves = cpuPlayer.getNextMoveAB(board);
+
+            // Assert that the best move for 'O' is at (1, 2).
+            //   |   |
+            // O | O | O
+            assertEquals(1, possibleMoves.get(0).getRow());
+            assertEquals(2, possibleMoves.get(0).getCol());
+        }
+
+        @Test
+        void testAlphaBetaAlgorithm_PlayerX_Could_Win_Vertical() {
+            // Create a new board
+            Board board = new Board();
+
+            // Create a CPUPlayer with 'X' mark
+            CPUPlayer cpuPlayer = new CPUPlayer(Mark.X);
+
+            // Make valid moves for 'X' player to win vertically
+            // X |   |
+            // X | O | O
+            //   |   |
+            board.play(new Move(0, 0), Mark.X);
+            board.play(new Move(1, 1), Mark.O);
+            board.play(new Move(0, 1), Mark.X);
+            board.play(new Move(2, 1), Mark.O);
+
+            // Get the next move using the Alpha-Beta Pruning algorithm
+            ArrayList<Move> possibleMoves = cpuPlayer.getNextMoveAB(board);
+
+            // Assert that the best move for 'X' is at (0, 2).
+            // X |   | X
+            // X | O | O
+            //   |   |
+            assertEquals(0, possibleMoves.get(0).getRow());
+            assertEquals(2, possibleMoves.get(0).getCol());
+        }
+
+        @Test
+        void testAlphaBetaAlgorithm_PlayerO_Could_Lose_Vertical() {
+            // Create a new board
+            Board board = new Board();
+
+            // Create a CPUPlayer with 'O' mark
+            CPUPlayer cpuPlayer = new CPUPlayer(Mark.O);
+
+            // Make valid moves for 'O' player to lose vertically
+            // X |   |
+            // X | O | O
+            //   |   |
+            board.play(new Move(0, 0), Mark.X);
+            board.play(new Move(1, 1), Mark.O);
+            board.play(new Move(0, 1), Mark.X);
+            board.play(new Move(2, 1), Mark.O);
+
+            // Get the next move using the Alpha-Beta Pruning algorithm
+            ArrayList<Move> possibleMoves = cpuPlayer.getNextMoveAB(board);
+
+            // Assert that the best move for 'O' is at (0, 2).
+            // X |   | O
+            // X | O | O
+            //   |   |
+            assertEquals(0, possibleMoves.get(0).getRow());
+            assertEquals(2, possibleMoves.get(0).getCol());
+        }
+    }
+
