@@ -1,13 +1,10 @@
 // Enumeration pour représenter les marques sur le plateau
 class Board {
     private Mark[][] board;
-    private int size;
-
-    private Mark winner;
+    private final int size =3;
 
     // Constructeur pour initialiser le plateau de jeu vide
-    public Board(int size) {
-        this.size = size;
+    public Board() {
         board = new Mark[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -20,19 +17,21 @@ class Board {
     public void play(Move m, Mark mark) {
         int row = m.getRow();
         int col = m.getCol();
-
+        
         // Assurez-vous que la case est valide et vide
         if (row >= 0 && row < size && col >= 0 && col < size && board[row][col] == Mark.EMPTY) {
             board[row][col] = mark;
         } else {
             // Gérer les erreurs si la case n'est pas valide ou déjà occupée
-            System.out.println("Mouvement invalide !");
+        	throw new IllegalArgumentException("Mouvement invalide !");
         }
     }
 
     // Évalue l'état du jeu pour la marque spécifiée
     public int evaluate(Mark mark) {
         // À implémenter : logique d'évaluation du jeu
+    	if(mark == Mark.EMPTY) return -1;
+    	Mark adversaire = (mark == Mark.O) ? Mark.X : Mark.O;
 
         // Vérifier les lignes, les colonnes et les diagonales pour déterminer le résultat du jeu.
 
@@ -40,26 +39,27 @@ class Board {
         for (int row = 0; row < size; row++) {
             int count = 0;
             for (int col = 0; col < size; col++) {
-                if (board[row][col] == mark) {
-                    count++;
-                } else if (board[row][col] != Mark.EMPTY) {
+                if (board[row][col] == mark) count++;
+                if (board[row][col] == adversaire) count--;
+            	else if (board[row][col] == adversaire) {
                     // Si une case est occupée par l'adversaire, aucune victoire possible dans cette ligne
-                    count = 0;
                     break;
                 }
             }
             if (count == size) {
                 // Le joueur 'mark' a gagné
-                winner = mark;
                 return 100;
             }
-            if (winner != null && winner != mark) {
-                return -100;
+            if (count == -size) {
+            	// Le joueur 'adversaire' a gagné
+            	return -100;
             }
         }
 
         // Vous devrez faire des vérifications similaires pour les colonnes et les diagonales.
-
+        if(diagWin(mark)) return 100;
+        if(diagWin(adversaire)) return -100;
+        
         // Si aucune victoire n'est détectée, vous pouvez vérifier s'il y a égalité (match nul).
         boolean isTie = true;
         for (int row = 0; row < size; row++) {
@@ -82,7 +82,13 @@ class Board {
     public int getSize() {
         return size;
     }
+    
+    public boolean diagWin(Mark mark) {
+        return (board[0][0] == mark && board[1][1] == mark && board[2][2] == mark) ||
+               (board[0][2] == mark && board[1][1] == mark && board[2][0] == mark);
+    }
 
+    
     public Mark[][] getBoard() {
         return board;
     }
